@@ -1,0 +1,20 @@
+schema_version = "1.0.0"
+
+id = "textools"
+version = "1.6.2"
+name = "TexTools"
+tagline = "Professional UV and Texture tools for Blender"
+type = "add-on"
+
+maintainer = "renderhjs, franMarz, Sav Martin"
+website = "https://github.com/SavMartin/TexTools-Blender"
+
+blender_version_min = "5.0.0"
+
+license = [
+	"SPDX:GPL-3.0-or-later",
+]
+
+[permissions]
+files = "Required for baking textures and saving/loading images"
+clipboard = "Required for Color ID palette import and export"

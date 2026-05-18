@@ -2,7 +2,7 @@ import bpy
 import re
 
 bversion_string = bpy.app.version_string
-bversion_reg = re.match("^(\d\.\d?\d)", bversion_string)
+bversion_reg = re.match(r"^(\d\.\d?\d)", bversion_string)
 bversion = float(bversion_reg.group(0))
 
 selection_uv_mode = ''
@@ -31,5 +31,10 @@ sets = []
 def tt_settings():
 	return bpy.context.scene.texToolsSettings
 
+
+def addon_package():
+	return __package__
+
+
 def prefs():
-	return bpy.context.preferences.addons[__package__].preferences
+	return bpy.context.preferences.addons[addon_package()].preferences

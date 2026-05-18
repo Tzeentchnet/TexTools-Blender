@@ -1,83 +1,71 @@
-bl_info = {
-	"name": "TexTools",
-	"description": "Professional UV and Texture tools for Blender.",
-	"author": "renderhjs, franMarz, Sav Martin",
-	"version": (1, 6, 2),
-	"blender": (2, 80, 0),
-	"category": "UV",
-	"location": "UV Image Editor > Tools > 'TexTools' panel"
-}
-
-
-
 from . import settings
-from . import utilities_ui
-from . import utilities_bake
-from . import utilities_color
-from . import utilities_texel
-from . import utilities_bbox
-from . import utilities_uv
-from . import utilities_meshtex
+from .utilities import utilities_ui
+from .utilities import utilities_bake
+from .utilities import utilities_color
+from .utilities import utilities_texel
+from .utilities import utilities_bbox
+from .utilities import utilities_uv
+from .utilities import utilities_meshtex
 
-from . import op_align
-from . import op_bake
-from . import op_bake_explode
-from . import op_bake_organize_names
-from . import op_texture_preview
-from . import op_texture_preview_cleanup
-from . import op_color_assign
-from . import op_color_clear
-from . import op_color_convert_texture
-from . import op_color_convert_vertex_colors
-from . import op_color_from_elements
-from . import op_color_from_materials
-from . import op_color_from_directions
-from . import op_edge_split_bevel
-from . import op_color_io_export
-from . import op_color_io_import
-from . import op_color_select
-from . import op_color_select_vertex
-from . import op_island_align_edge
-from . import op_island_align_sort
-from . import op_island_align_world
-from . import op_island_mirror
-from . import op_island_rotate_90
-from . import op_island_straighten_edge_loops
-from . import op_island_centralize
-from . import op_randomize
-from . import op_rectify
-from . import op_select_islands_identical
-from . import op_select_islands_outline
-from . import op_select_islands_overlap
-from . import op_select_islands_flipped
-from . import op_select_zero
-from . import op_relax
-from . import op_smoothing_uv_islands
-from . import op_meshtex_create
-from . import op_meshtex_wrap
-from . import op_meshtex_trim
-from . import op_meshtex_trim_collapse
-from . import op_meshtex_pattern
-from . import op_texel_checker_map
-from . import op_texel_checker_map_cleanup
-from . import op_texel_density_get
-from . import op_texel_density_set
-from . import op_texture_reload_all
-from . import op_texture_save
-from . import op_texture_open
-from . import op_texture_select
-from . import op_texture_remove
-from . import op_unwrap_faces_iron
-from . import op_stitch
-from . import op_unwrap_edge_peel
-from . import op_uv_channel_add
-from . import op_uv_channel_remove
-from . import op_uv_channel_swap
-from . import op_uv_crop
-from . import op_uv_fill
-from . import op_uv_resize
-from . import op_uv_size_get
-from . import op_uv_unwrap
+from .operators import op_align
+from .operators import op_bake
+from .operators import op_bake_explode
+from .operators import op_bake_organize_names
+from .operators import op_texture_preview
+from .operators import op_texture_preview_cleanup
+from .operators import op_color_assign
+from .operators import op_color_clear
+from .operators import op_color_convert_texture
+from .operators import op_color_convert_vertex_colors
+from .operators import op_color_from_elements
+from .operators import op_color_from_materials
+from .operators import op_color_from_directions
+from .operators import op_edge_split_bevel
+from .operators import op_color_io_export
+from .operators import op_color_io_import
+from .operators import op_color_select
+from .operators import op_color_select_vertex
+from .operators import op_island_align_edge
+from .operators import op_island_align_sort
+from .operators import op_island_align_world
+from .operators import op_island_mirror
+from .operators import op_island_rotate_90
+from .operators import op_island_straighten_edge_loops
+from .operators import op_island_centralize
+from .operators import op_randomize
+from .operators import op_rectify
+from .operators import op_select_islands_identical
+from .operators import op_select_islands_outline
+from .operators import op_select_islands_overlap
+from .operators import op_select_islands_flipped
+from .operators import op_select_zero
+from .operators import op_relax
+from .operators import op_smoothing_uv_islands
+from .operators import op_meshtex_create
+from .operators import op_meshtex_wrap
+from .operators import op_meshtex_trim
+from .operators import op_meshtex_trim_collapse
+from .operators import op_meshtex_pattern
+from .operators import op_texel_checker_map
+from .operators import op_texel_checker_map_cleanup
+from .operators import op_texel_density_get
+from .operators import op_texel_density_set
+from .operators import op_texture_reload_all
+from .operators import op_texture_save
+from .operators import op_texture_open
+from .operators import op_texture_select
+from .operators import op_texture_remove
+from .operators import op_unwrap_faces_iron
+from .operators import op_stitch
+from .operators import op_unwrap_edge_peel
+from .operators import op_uv_channel_add
+from .operators import op_uv_channel_remove
+from .operators import op_uv_channel_swap
+from .operators import op_uv_crop
+from .operators import op_uv_fill
+from .operators import op_uv_resize
+from .operators import op_uv_size_get
+from .operators import op_uv_unwrap
 
 
 
@@ -424,7 +412,8 @@ def on_dropdown_uv_channel(self, context):
 				if index < len(ob.data.uv_layers):
 					ob.data.uv_layers.active_index = index
 					#bpy.context.object.data.uv_layers[index].active_render = True
-					ob.data.uv_layers[0].active_render = True
+					if hasattr(ob.data.uv_layers[0], "active_render"):
+						ob.data.uv_layers[0].active_render = True
 
 
 
@@ -491,7 +480,7 @@ def on_slider_meshtexture_wrap(self, context):
 class TexToolsSettings(PropertyGroup):
 
 	def get_bake_back_color(self):
-		return self.get("bake_back_color", bpy.context.preferences.addons[__package__].preferences.bake_back_color_def)
+		return self.get("bake_back_color", prefs().bake_back_color_def)
 
 	def set_bake_back_color(self, value):
 		if value is not None:
@@ -876,7 +865,7 @@ class UI_PT_Panel_Layout(Panel):
 	def draw_header(self, _):
 		layout = self.layout
 		row = layout.row(align=True)
-		if bpy.context.preferences.addons[__package__].preferences.bool_help:
+		if prefs().bool_help:
 			row.operator("wm.url_open", text="", icon='INFO').url = "http://renderhjs.net/textools/blender/index.html#uvlayout"
 		row.label(text ="UV Layout")
 
@@ -1049,7 +1038,7 @@ class UI_PT_Panel_Bake(Panel):
 	def draw_header(self, _):
 		layout = self.layout
 		row = layout.row(align=True)
-		if bpy.context.preferences.addons[__package__].preferences.bool_help:
+		if prefs().bool_help:
 			row.operator("wm.url_open", text="", icon='INFO').url = "http://renderhjs.net/textools/blender/index.html#texturebaking"
 		row.label(text ="Baking")
 
@@ -1314,6 +1303,7 @@ class UI_PT_Panel_Bake(Panel):
 class UI_MT_op_color_dropdown_io(Menu):
 	bl_idname = "UI_MT_op_color_dropdown_io"
 	bl_label = "IO"
+	bl_description = "Import or export the Color ID palette"
 
 	def draw(self, context):
 		layout = self.layout
@@ -1327,7 +1317,7 @@ class UI_MT_op_color_dropdown_io(Menu):
 class UI_MT_op_color_dropdown_convert_from(Menu):
 	bl_idname = "UI_MT_op_color_dropdown_convert_from"
 	bl_label = "From"
-	bl_description = "Create Color IDs from ..."
+	bl_description = "Create Color IDs from mesh elements, material slots, or face directions"
 
 	def draw(self, context):
 		layout = self.layout
@@ -1341,7 +1331,7 @@ class UI_MT_op_color_dropdown_convert_from(Menu):
 class UI_MT_op_color_dropdown_convert_to(Menu):
 	bl_idname = "UI_MT_op_color_dropdown_convert_to"
 	bl_label = "To"
-	bl_description = "Convert Color IDs into ..."
+	bl_description = "Convert Color IDs into a texture atlas or vertex colors"
 
 	def draw(self, context):
 		layout = self.layout
@@ -1377,7 +1367,7 @@ class UI_PT_Panel_Colors(Panel):
 	def draw_header(self, _):
 		layout = self.layout
 		row = layout.row(align=True)
-		if bpy.context.preferences.addons[__package__].preferences.bool_help:
+		if prefs().bool_help:
 			row.operator("wm.url_open", text="", icon='INFO').url = "http://renderhjs.net/textools/blender/index.html#colorid"
 		row.label(text ="Color ID")
 
@@ -1472,7 +1462,7 @@ class UI_PT_Panel_MeshTexture(Panel):
 	def draw_header(self, _):
 		layout = self.layout
 		row = layout.row(align=True)
-		if bpy.context.preferences.addons[__package__].preferences.bool_help:
+		if prefs().bool_help:
 			row.operator("wm.url_open", text="", icon='INFO').url = "http://renderhjs.net/textools/blender/index.html#meshtexture"
 		row.label(text ="Mesh UV Tools")
 
@@ -1549,6 +1539,7 @@ def menu_IMAGE_uvs(self, context):
 class VIEW3D_MT_submenu_align(Menu):
 	bl_label="Align"
 	bl_idname="VIEW3D_MT_submenu_align"
+	bl_description="Align selected UVs to cardinal directions"
 	def draw(self, context):
 		layout = self.layout
 		layout.operator(op_align.op.bl_idname, text="←", icon_value = icon_get("op_align_left")).direction = "left"
@@ -1690,14 +1681,6 @@ classes = (
 
 
 def register():
-	# Force reload by kaio: https://devtalk.blender.org/t/blender-2-91-addon-dev-workflow/15320/6
-	from sys import modules
-	from importlib import reload
-	modules[__name__] = reload(modules[__name__])
-	for name, module in modules.copy().items():
-		if name.startswith(f"{__package__}."):
-			globals()[name] = reload(module)
-
 	for c in classes:
 		bpy.utils.register_class(c)
 
@@ -1784,37 +1767,46 @@ def register():
 
 
 def unregister():
-	try:
-
-		for c in reversed(classes):
+	for c in reversed(classes):
+		try:
 			bpy.utils.unregister_class(c)
-	except Exception as e:
-		print(e)
+		except (RuntimeError, ValueError):
+			pass
 
-		# Right way for delete properties, but settings not save
-		# https://blender.stackexchange.com/questions/304852/how-to-delete-custom-properties-from-blend-file/305156#305156
-		# del bpy.types.Scene.texToolsSettings
-
-		# GUI Utilities
+	try:
 		utilities_ui.unregister()
+	except Exception:
+		pass
 
-		# Handle the keymap
-		for km, kmi in keymaps:
+	for km, kmi in keymaps:
+		try:
 			km.keymap_items.remove(kmi)
-		keymaps.clear()
+		except Exception:
+			pass
+	keymaps.clear()
 
-		bpy.types.IMAGE_MT_uvs.remove(menu_IMAGE_uvs)
-		bpy.types.IMAGE_MT_select.remove(menu_IMAGE_select)
-		bpy.types.IMAGE_MT_image.remove(menu_IMAGE_MT_image)
-		bpy.types.VIEW3D_MT_object.remove(menu_VIEW3D_MT_object)
-		bpy.types.VIEW3D_MT_add.remove(menu_VIEW3D_MT_mesh_add)
-		bpy.types.VIEW3D_MT_uv_map.remove(menu_VIEW3D_MT_uv_map)
-		bpy.types.VIEW3D_MT_object_context_menu.remove(menu_VIEW3D_MT_object_context_menu)
+	menus_to_remove = [
+		(bpy.types.IMAGE_MT_uvs, menu_IMAGE_uvs),
+		(bpy.types.IMAGE_MT_select, menu_IMAGE_select),
+		(bpy.types.IMAGE_MT_image, menu_IMAGE_MT_image),
+		(bpy.types.VIEW3D_MT_object, menu_VIEW3D_MT_object),
+		(bpy.types.VIEW3D_MT_add, menu_VIEW3D_MT_mesh_add),
+		(bpy.types.VIEW3D_MT_uv_map, menu_VIEW3D_MT_uv_map),
+		(bpy.types.VIEW3D_MT_object_context_menu, menu_VIEW3D_MT_object_context_menu),
+	]
 
+	for menu_type, menu_func in menus_to_remove:
+		try:
+			menu_type.remove(menu_func)
+		except (AttributeError, ValueError):
+			pass
 
-	# Unregister Settings
-	# del bpy.types.Scene.texToolsSettings
-	del bpy.types.Object.TT_CM_Scale
+	for owner, name in ((bpy.types.Scene, "texToolsSettings"), (bpy.types.Object, "TT_CM_Scale")):
+		try:
+			if hasattr(owner, name):
+				delattr(owner, name)
+		except AttributeError:
+			pass
 
 
 
